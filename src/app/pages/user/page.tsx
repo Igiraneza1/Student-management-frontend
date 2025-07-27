@@ -1,32 +1,68 @@
-"use client";
+"use client"; // If using App Router
+
 import { useEffect, useState } from "react";
+
+type User = {
+  _id: string;
+  email: string;
+  registrationNumber: string;
+  fieldOfStudy: string;
+  role: string;
+};
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) setUsers([JSON.parse(stored)]);
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setError("Not authenticated.");
+      return;
+    }
+
+    fetch("http://localhost:5000/api/users", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Access denied");
+        }
+        return res.json();
+      })
+      .then(setUsers)
+      .catch((err) => {
+        console.error(err);
+        setError("You are not authorized to view users.");
+      });
   }, []);
 
   return (
     <div className="p-10">
       <h1 className="text-2xl font-bold text-blue-500 mb-6">All Users</h1>
-      {users.length === 0 ? (
+
+      {error && <p className="text-red-500">{error}</p>}
+
+      {users.length === 0 && !error ? (
         <p>No users found.</p>
       ) : (
-        <table className="w-full border">
+        <table className="w-full border border-gray-300 rounded-md shadow-md">
           <thead>
-            <tr className="bg-gray-200">
-              <th className="p-2 border">Reg. Number</th>
-              <th className="p-2 border">Field of Study</th>
+            <tr className="bg-gray-200 text-left">
+              <th className="p-3 border">Email</th>
+              <th className="p-3 border">Reg. Number</th>
+              <th className="p-3 border">Field of Study</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((u, i) => (
-              <tr key={i} className="text-center">
-                <td className="border p-2">{u.registrationNumber}</td>
-                <td className="border p-2">{u.fieldOfStudy}</td>
+            {users.map((u) => (
+              <tr key={u._id} className="hover:bg-gray-50">
+                <td className="p-3 border">{u.email}</td>
+                <td className="p-3 border">{u.registrationNumber}</td>
+                <td className="p-3 border">{u.fieldOfStudy}</td>
               </tr>
             ))}
           </tbody>

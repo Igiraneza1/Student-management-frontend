@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 export default function SettingsPage() {
   const [form, setForm] = useState({ registrationNumber: "", fieldOfStudy: "" });
+  const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -12,17 +13,39 @@ export default function SettingsPage() {
       registrationNumber: storedUser.registrationNumber || "",
       fieldOfStudy: storedUser.fieldOfStudy || "",
     });
+    setUserId(storedUser._id); // store user ID for backend call
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleUpdate = () => {
-    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-    const updatedUser = { ...storedUser, ...form };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    router.push("/profile");
+  const handleUpdate = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!userId || !token) return alert("User not found or not authenticated");
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/users/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error("Update failed");
+
+      const updatedUser = await res.json();
+
+      // update localStorage and redirect
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      router.push("/profile");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update. Try again.");
+    }
   };
 
   return (
