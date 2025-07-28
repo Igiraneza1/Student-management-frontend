@@ -13,7 +13,8 @@ export default function SettingsPage() {
       registrationNumber: storedUser.registrationNumber || "",
       fieldOfStudy: storedUser.fieldOfStudy || "",
     });
-    setUserId(storedUser._id); // store user ID for backend call
+    setUserId(storedUser._id); 
+
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,14 +1,7 @@
-"use client"; // If using App Router
+"use client"; 
 
 import { useEffect, useState } from "react";
-
-type User = {
-  _id: string;
-  email: string;
-  registrationNumber: string;
-  fieldOfStudy: string;
-  role: string;
-};
+import User from '../../types/user'
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -42,12 +35,12 @@ export default function UsersPage() {
 
   return (
     <div className="p-10">
-      <h1 className="text-2xl font-bold text-blue-500 mb-6">All Users</h1>
+      <h1 className="text-2xl font-bold text-blue-500 mb-6">All Students</h1>
 
       {error && <p className="text-red-500">{error}</p>}
 
       {users.length === 0 && !error ? (
-        <p>No users found.</p>
+        <p>No Student found.</p>
       ) : (
         <table className="w-full border border-gray-300 rounded-md shadow-md">
           <thead>
@@ -59,7 +52,7 @@ export default function UsersPage() {
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u._id} className="hover:bg-gray-50">
+              <tr key={u.id} className="hover:bg-gray-50">
                 <td className="p-3 border">{u.email}</td>
                 <td className="p-3 border">{u.registrationNumber}</td>
                 <td className="p-3 border">{u.fieldOfStudy}</td>

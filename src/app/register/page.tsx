@@ -17,12 +17,30 @@ export default function Register() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    localStorage.setItem("user", JSON.stringify(form));
+    try {
+      const response = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
 
-    router.push("/login");
+      if (!response.ok) {
+        const data = await response.json();
+        alert("Registration failed: " + (data.message || "Unknown error"));
+        return;
+      }
+
+      alert("Registration successful! Please login.");
+      router.push("/login");
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Registration failed due to network error");
+    }
   };
 
   return (
@@ -36,10 +54,15 @@ export default function Register() {
           Create Account
         </h1>
 
-        <form onSubmit={handleSubmit} className="flex flex-col w-full max-w-md space-y-4">
-          
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col w-full max-w-md space-y-4"
+        >
           <div className="flex flex-col">
-            <label htmlFor="email" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -55,7 +78,10 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="password" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -71,7 +97,10 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="registrationNumber" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="registrationNumber"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Registration Number
             </label>
             <input
@@ -87,7 +116,10 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="fieldOfStudy" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="fieldOfStudy"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Field of Study
             </label>
             <input

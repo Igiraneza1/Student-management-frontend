@@ -2,6 +2,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import User from "@/app/types/user";
 
 export default function AdminPage() {
   const router = useRouter();
