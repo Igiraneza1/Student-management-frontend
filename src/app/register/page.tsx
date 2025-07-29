@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { isValidEmail } from "../utils/emailValidator"; 
 
 export default function Register() {
   const router = useRouter();
@@ -11,14 +12,25 @@ export default function Register() {
     password: "",
     registrationNumber: "",
     fieldOfStudy: "",
+    year: "",
   });
+
+  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isValidEmail(form.email)) {
+      setError("Please provide a valid email.");
+      return;
+    }
+
+    setError("");
 
     try {
       const response = await fetch("http://localhost:5000/api/register", {
@@ -59,10 +71,7 @@ export default function Register() {
           className="flex flex-col w-full max-w-md space-y-4"
         >
           <div className="flex flex-col">
-            <label
-              htmlFor="email"
-              className="mb-1 text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="mb-1 text-sm font-medium text-gray-700">
               Email
             </label>
             <input
@@ -78,10 +87,7 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col">
-            <label
-              htmlFor="password"
-              className="mb-1 text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="mb-1 text-sm font-medium text-gray-700">
               Password
             </label>
             <input
@@ -97,10 +103,7 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col">
-            <label
-              htmlFor="registrationNumber"
-              className="mb-1 text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="registrationNumber" className="mb-1 text-sm font-medium text-gray-700">
               Registration Number
             </label>
             <input
@@ -116,10 +119,7 @@ export default function Register() {
           </div>
 
           <div className="flex flex-col">
-            <label
-              htmlFor="fieldOfStudy"
-              className="mb-1 text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="fieldOfStudy" className="mb-1 text-sm font-medium text-gray-700">
               Field of Study
             </label>
             <input
@@ -133,6 +133,24 @@ export default function Register() {
               className="border-2 border-gray-300 text-black rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
             />
           </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="year" className="mb-1 text-sm font-medium text-gray-700">
+              Year of Attempt
+            </label>
+            <input
+              id="year"
+              name="year"
+              type="text"
+              required
+              placeholder="Enter year of attempt"
+              value={form.year}
+              onChange={handleChange}
+              className="border-2 border-gray-300 text-black rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
+            />
+          </div>
+
+          {error && <p className="text-red-600 font-medium">{error}</p>}
 
           <div className="flex space-x-4 pt-2">
             <Link

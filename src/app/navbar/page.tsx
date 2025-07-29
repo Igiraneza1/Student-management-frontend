@@ -18,7 +18,7 @@ export default function Navbar() {
     router.push("/login");
   };
 
-  if (!isAuthenticated) return null; // ❌ Don't render if not logged in
+  if (!isAuthenticated) return null; 
 
   return (
     <nav className="bg-blue-500 p-4 text-white flex justify-between">

@@ -12,10 +12,10 @@ export default function UsersPage() {
 
     if (!token) {
       setError("Not authenticated.");
-      return;
+      return;5
     }
 
-    fetch("http://localhost:5000/api/users", {
+    fetch("http://localhost:5000/api/v1/users/", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -44,18 +44,21 @@ export default function UsersPage() {
       ) : (
         <table className="w-full border border-gray-300 rounded-md shadow-md">
           <thead>
-            <tr className="bg-gray-200 text-left">
+            <tr className="bg-gray-200 text-black text-left">
               <th className="p-3 border">Email</th>
               <th className="p-3 border">Reg. Number</th>
               <th className="p-3 border">Field of Study</th>
+              <th className="p-3 border">Year of attempt</th>
+
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u.id} className="hover:bg-gray-50">
+              <tr key={u.id} className="hover:bg-gray-50 ">
                 <td className="p-3 border">{u.email}</td>
                 <td className="p-3 border">{u.registrationNumber}</td>
                 <td className="p-3 border">{u.fieldOfStudy}</td>
+                <td className="p-3 border">{u.year}</td>
               </tr>
             ))}
           </tbody>
