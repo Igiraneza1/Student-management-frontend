@@ -53,7 +53,7 @@ export default function UsersPage() {
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u.id || u.id} className="hover:border-2">
+              <tr key={u._id || u._id} className="hover:border-2">
                 <td className="p-3 border">{u.email}</td>
                 <td className="p-3 border">{u.registrationNumber}</td>
                 <td className="p-3 border">{u.fieldOfStudy}</td>
