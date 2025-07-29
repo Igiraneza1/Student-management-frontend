@@ -35,29 +35,31 @@ export default function UsersPage() {
 
   return (
     <div className="p-10">
-      <h1 className="text-2xl font-bold text-blue-500 mb-6">All Students</h1>
+      <h1 className="text-2xl font-bold text-blue-600 mb-6">All Students</h1>
 
       {error && <p className="text-red-500">{error}</p>}
 
       {users.length === 0 && !error ? (
-        <p>No Student found.</p>
+        <p>No students found.</p>
       ) : (
         <table className="w-full border border-gray-300 rounded-md shadow-md">
-          <thead>
-            <tr className="bg-gray-200 text-black text-left">
+          <thead className="bg-gray-200">
+            <tr className="text-left text-sm text-gray-700">
+              <th className="p-3 border">Name</th>
               <th className="p-3 border">Email</th>
-              <th className="p-3 border">Reg. Number</th>
-              <th className="p-3 border">Field of Study</th>
-              <th className="p-3 border">Year of attempt</th>
+              <th className="p-3 border">Course</th>
+              <th className="p-3 border">Enrollment Year</th>
+              <th className="p-3 border">Status</th>
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u._id || u._id} className="hover:border-2">
+              <tr key={u._id} className="hover:bg-gray-50 text-sm text-gray-800">
+                <td className="p-3 border">{u.name}</td>
                 <td className="p-3 border">{u.email}</td>
-                <td className="p-3 border">{u.registrationNumber}</td>
-                <td className="p-3 border">{u.fieldOfStudy}</td>
-                <td className="p-3 border">{u.year}</td>
+                <td className="p-3 border">{u.course}</td>
+                <td className="p-3 border">{u.enrollmentYear}</td>
+                <td className="p-3 border">{u.status}</td>
               </tr>
             ))}
           </tbody>

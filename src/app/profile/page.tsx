@@ -27,7 +27,7 @@ export default function ProfilePage() {
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/v1/users/me", {
+        const res = await fetch("http://localhost:5000/api/v1/users/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -67,7 +67,7 @@ export default function ProfilePage() {
     if (!token) return setError("Not authenticated");
 
     try {
-      const res = await fetch("http://localhost:5000/api/v1/users/me", {
+      const res = await fetch("http://localhost:5000/api/v1/users/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export default function ProfilePage() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/v1/users/me", {
+      const res = await fetch("http://localhost:5000/api/v1/users/profile", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
