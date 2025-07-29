@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import User from "../types/user"; 
+import User from "../types/user";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<User | null>(null);
@@ -14,12 +14,17 @@ export default function ProfilePage() {
     role: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return setError("Not authenticated");
+      if (!token) {
+        setError("Not authenticated");
+        router.push("/login");
+        return;
+      }
 
       try {
         const res = await fetch("http://localhost:5000/api/v1/users/me", {
@@ -30,7 +35,8 @@ export default function ProfilePage() {
 
         if (!res.ok) {
           const err = await res.json();
-          return setError(err.message || "Failed to load profile");
+          setError(err.message || "Failed to load profile");
+          return;
         }
 
         const user = await res.json();
@@ -44,11 +50,13 @@ export default function ProfilePage() {
         });
       } catch {
         setError("Network error");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -111,74 +119,76 @@ export default function ProfilePage() {
     <div className="max-w-md mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4 text-blue-600">Your Profile</h2>
 
+      {loading && <p>Loading...</p>}
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      <div className="space-y-4">
-        <label className="block">
-          Email:
-          <input
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="block w-full border rounded p-2 mt-1"
-          />
-        </label>
+      {!loading && profile && (
+        <div className="space-y-4">
+          <label className="block">
+            Email:
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="block w-full border rounded p-2 mt-1"
+            />
+          </label>
 
-        <label className="block">
-          Registration Number:
-          <input
-            name="registrationNumber"
-            value={formData.registrationNumber}
-            onChange={handleChange}
-            className="block w-full border rounded p-2 mt-1"
-          />
-        </label>
+          <label className="block">
+            Registration Number:
+            <input
+              name="registrationNumber"
+              value={formData.registrationNumber}
+              onChange={handleChange}
+              className="block w-full border rounded p-2 mt-1"
+            />
+          </label>
 
-        <label className="block">
-          Field of Study:
-          <input
-            name="fieldOfStudy"
-            value={formData.fieldOfStudy}
-            onChange={handleChange}
-            className="block w-full border rounded p-2 mt-1"
-          />
-        </label>
+          <label className="block">
+            Field of Study:
+            <input
+              name="fieldOfStudy"
+              value={formData.fieldOfStudy}
+              onChange={handleChange}
+              className="block w-full border rounded p-2 mt-1"
+            />
+          </label>
 
-        <label className="block">
-          Year:
-          <input
-            name="year"
-            value={formData.year}
-            onChange={handleChange}
-            className="block w-full border rounded p-2 mt-1"
-          />
-        </label>
+          <label className="block">
+            Year:
+            <input
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              className="block w-full border rounded p-2 mt-1"
+            />
+          </label>
 
-        <label className="block">
-          Role:
-          <input
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            disabled
-            className="block w-full border bg-gray-100 rounded p-2 mt-1"
-          />
-        </label>
+          <label className="block">
+            Role:
+            <input
+              name="role"
+              value={formData.role}
+              disabled
+              className="block w-full border bg-gray-100 rounded p-2 mt-1"
+            />
+          </label>
 
-        <button
-          onClick={handleUpdate}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          Save Changes
-        </button>
+          <button
+            onClick={handleUpdate}
+            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          >
+            Save Changes
+          </button>
 
-        <button
-          onClick={handleDelete}
-          className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 mt-2"
-        >
-          Delete Account
-        </button>
-      </div>
+          <button
+            onClick={handleDelete}
+            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 mt-2"
+          >
+            Delete Account
+          </button>
+        </div>
+      )}
     </div>
   );
 }
