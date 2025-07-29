@@ -33,26 +33,26 @@ export default function Register() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
+  const response = await fetch("http://localhost:5000/api/v1/users/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(form),
+  });
 
-      if (!response.ok) {
-        const data = await response.json();
-        alert("Registration failed: " + (data.message || "Unknown error"));
-        return;
-      }
+  if (!response.ok) {
+    const data = await response.json();
+    alert("Registration failed: " + (data.message || "Unknown error"));
+    return;
+  }
 
-      alert("Registration successful! Please login.");
-      router.push("/login");
-    } catch (error) {
-      console.error("Registration error:", error);
-      alert("Registration failed due to network error");
-    }
+  alert("Registration successful! Please login.");
+  router.push("/login");
+} catch (error) {
+  console.error("Registration error:", error);
+  alert("Registration failed due to network error");
+}
   };
 
   return (
@@ -171,4 +171,4 @@ export default function Register() {
       </div>
     </div>
   );
-}
+  }

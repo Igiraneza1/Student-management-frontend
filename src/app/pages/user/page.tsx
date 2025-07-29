@@ -1,7 +1,7 @@
-"use client"; 
+"use client";
 
 import { useEffect, useState } from "react";
-import User from '../../types/user'
+import User from "../../types/user";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -12,7 +12,7 @@ export default function UsersPage() {
 
     if (!token) {
       setError("Not authenticated.");
-      return;5
+      return;
     }
 
     fetch("http://localhost:5000/api/v1/users/", {
@@ -49,12 +49,11 @@ export default function UsersPage() {
               <th className="p-3 border">Reg. Number</th>
               <th className="p-3 border">Field of Study</th>
               <th className="p-3 border">Year of attempt</th>
-
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u.id} className="hover:bg-gray-50 ">
+              <tr key={u.id || u.id} className="hover:border-2">
                 <td className="p-3 border">{u.email}</td>
                 <td className="p-3 border">{u.registrationNumber}</td>
                 <td className="p-3 border">{u.fieldOfStudy}</td>
