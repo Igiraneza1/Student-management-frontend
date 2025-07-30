@@ -1,9 +1,15 @@
-export default interface User {
+export type UserRole = "student" | "admin";
+
+export interface User {
   _id: string;
   name: string;
   email: string;
-  course: string;
-  enrollmentYear: string;
-  role: "user" | "admin";
-  status: "Active" | "Graduated" | "Dropped";
+  course?: string;
+  enrollmentYear?: number;
+  role: UserRole;
+  status?: string;
+}
+
+export interface UserForm extends Partial<User> {
+  password?: string;
 }

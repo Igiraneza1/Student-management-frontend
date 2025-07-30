@@ -206,7 +206,7 @@ export default function Register() {
             </button>
 
             <Link
-              href="/login"
+              href="/"
               className="text-blue-600 hover:underline text-sm"
             >
               Already have an account?
