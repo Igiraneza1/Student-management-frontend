@@ -1,124 +1,134 @@
 "use client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Login() {
+export default function LoginPage() {
   const router = useRouter();
-
   const [form, setForm] = useState({
-    emailOrUsername: "",
+    email: "",
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/v1/users/login", {
+      const res = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: form.emailOrUsername, 
-          password: form.password,
-        }),
+        body: JSON.stringify(form),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
-        alert(data.message || "Login failed");
+      if (!res.ok) {
+        setError(data.message || "Invalid credentials");
         return;
       }
 
-      
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("loggedIn", "true");
 
-      router.push("/pages/user"); 
-
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Login failed due to network error");
+      router.push("/pages/user");
+    } catch (err: unknown) {
+      console.error("Login error:", err);
+      setError("Login failed due to network error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="grid grid-cols-2 bg-gray-100 h-screen">
-      <div className="bg-blue-500 flex justify-center items-center">
-        <h1 className="text-4xl text-white font-semibold">Welcome Back!</h1>
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+      <div className="hidden md:flex bg-blue-600 items-center justify-center text-white">
+        <h1 className="text-4xl font-bold">Welcome Back!</h1>
       </div>
 
-      <div className="flex flex-col justify-center items-center">
-        <h1 className="text-3xl text-blue-500 text-center p-10 font-bold">
-          Student Management System
-        </h1>
+      <div className="flex flex-col justify-center items-center px-6 py-12 bg-gray-50">
+        <div className="w-full max-w-md">
+          <h2 className="text-2xl font-bold text-blue-600 text-center mb-6">
+            Student Management System
+          </h2>
 
-        <form
-          onSubmit={handleLogin}
-          className="flex flex-col w-full max-w-md space-y-4"
-        >
-          <div className="flex flex-col">
-            <label
-              htmlFor="emailOrUsername"
-              className="mb-1 text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              id="emailOrUsername"
-              name="emailOrUsername"
-              type="email"
-              placeholder="Enter your email"
-              value={form.emailOrUsername}
-              onChange={handleChange}
-              className="border-2 border-gray-300 text-black rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
-              required
-            />
-          </div>
+          {error && (
+            <div className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-sm">
+              {error}
+            </div>
+          )}
 
-          <div className="flex flex-col">
-            <label
-              htmlFor="password"
-              className="mb-1 text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              value={form.password}
-              onChange={handleChange}
-              className="border-2 border-gray-300 text-black rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
-              required
-            />
-          </div>
+          <form onSubmit={handleLogin} className="space-y-4">
+            {/* Email */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:border-blue-500"
+                placeholder="you@example.com"
+              />
+            </div>
 
-          <div className="flex space-x-4 pt-2">
-            <button
-              type="submit"
-              className="bg-blue-500 text-sm rounded-full text-white px-8 py-2 font-bold hover:bg-blue-600 transition text-center"
-            >
-              Login
-            </button>
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:border-blue-500"
+                placeholder="********"
+              />
+            </div>
 
-            <Link
-              href="/register"
-              className="bg-gray-100 text-sm rounded-full text-blue-500 px-8 py-2 font-bold hover:bg-blue-600 hover:text-white transition text-center"
-            >
-              Register
-            </Link>
-          </div>
-        </form>
+            {/* Submit */}
+            <div className="flex items-center justify-between pt-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition"
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
+
+              <Link
+                href="/register"
+                className="text-blue-600 hover:underline text-sm"
+              >
+                Do not have an account?
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

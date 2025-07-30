@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -17,12 +18,15 @@ export default function Register() {
   });
 
   const [error, setError] = useState("");
+  const [loading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!isValidEmail(form.email)) {
@@ -33,11 +37,14 @@ export default function Register() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/v1/users/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/v1/users/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        }
+      );
 
       const data = await response.json();
 
@@ -50,19 +57,22 @@ export default function Register() {
       router.push("/login");
     } catch (error) {
       console.error("Registration error:", error);
-      alert("Registration failed due to network error");
+      alert("Registration failed due to a network error");
     }
   };
 
   return (
-    <div className="grid grid-cols-2 bg-gray-100 h-screen">
-      <div className="bg-blue-500 flex justify-center items-center">
-        <h1 className="text-4xl text-white font-semibold">Join Us Today!</h1>
+    <div className="grid grid-cols-1 md:grid-cols-2 bg-gray-100 ">
+      {/* Left Banner */}
+      <div className="bg-blue-500 hidden md:flex justify-center items-center">
+        <h1 className="text-4xl text-white font-semibold text-center px-6">
+          Welcome to Our Platform!
+        </h1>
       </div>
 
-      <div className="flex flex-col justify-center items-center bg-gray-100 p-10">
-        <h1 className="text-3xl text-blue-500 text-center p-10 font-bold">
-          Student Registration
+      <div className="flex flex-col justify-center items-center px-6 sm:px-10">
+        <h1 className="text-3xl text-blue-500 text-center mb-8 font-bold p-3">
+          Create Your Account
         </h1>
 
         <form
@@ -70,7 +80,10 @@ export default function Register() {
           className="flex flex-col w-full max-w-md space-y-4"
         >
           <div className="flex flex-col">
-            <label htmlFor="name" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="name"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Full Name
             </label>
             <input
@@ -80,13 +93,16 @@ export default function Register() {
               placeholder="Enter your full name"
               value={form.name}
               onChange={handleChange}
-              className="border-2 border-gray-300 text-black rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
+              className="border-2 border-gray-300 rounded-md py-2 px-4 text-black focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
               required
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="email" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -96,13 +112,16 @@ export default function Register() {
               placeholder="Enter your email"
               value={form.email}
               onChange={handleChange}
-              className="border-2 border-gray-300 text-black rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
+              className="border-2 border-gray-300 rounded-md py-2 px-4 text-black focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
               required
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="password" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -112,13 +131,16 @@ export default function Register() {
               placeholder="Enter your password"
               value={form.password}
               onChange={handleChange}
-              className="border-2 border-gray-300 text-black rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
+              className="border-2 border-gray-300 rounded-md py-2 px-4 text-black focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
               required
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="course" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="course"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Course
             </label>
             <input
@@ -128,13 +150,16 @@ export default function Register() {
               placeholder="Enter your course"
               value={form.course}
               onChange={handleChange}
-              className="border-2 border-gray-300 text-black rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
+              className="border-2 border-gray-300 rounded-md py-2 px-4 text-black focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
               required
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="enrollmentYear" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="enrollmentYear"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Enrollment Year
             </label>
             <input
@@ -144,13 +169,16 @@ export default function Register() {
               placeholder="e.g. 2025"
               value={form.enrollmentYear}
               onChange={handleChange}
-              className="border-2 border-gray-300 text-black rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
+              className="border-2 border-gray-300 rounded-md py-2 px-4 text-black focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
               required
             />
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="status" className="mb-1 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="status"
+              className="mb-1 text-sm font-medium text-gray-700"
+            >
               Status
             </label>
             <select
@@ -158,7 +186,7 @@ export default function Register() {
               name="status"
               value={form.status}
               onChange={handleChange}
-              className="border-2 border-gray-300 text-black rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
+              className="border-2 border-gray-300 rounded-md py-2 px-4 text-black focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300 transition duration-200"
             >
               <option value="Active">Active</option>
               <option value="Graduated">Graduated</option>
@@ -168,19 +196,20 @@ export default function Register() {
 
           {error && <p className="text-red-600 font-medium">{error}</p>}
 
-          <div className="flex space-x-4 pt-2">
+          <div className="flex items-center justify-between pb-5">
             <button
               type="submit"
-              className="bg-blue-500 text-sm rounded-full text-white px-8 py-2 font-bold hover:bg-blue-600 transition text-center"
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition"
             >
-              Register
+              {loading ? "Registering..." : "Register"}
             </button>
 
             <Link
               href="/login"
-              className="bg-gray-100 text-sm rounded-full text-blue-500 px-8 py-2 font-bold hover:bg-blue-600 hover:text-white transition text-center"
+              className="text-blue-600 hover:underline text-sm"
             >
-              Login
+              Already have an account?
             </Link>
           </div>
         </form>
