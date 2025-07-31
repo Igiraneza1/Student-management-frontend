@@ -9,7 +9,6 @@ type User = {
   email: string;
   role: string;
   phone?: string;
-  // add other fields as needed
 };
 
 export default function ProfilePage() {
@@ -24,7 +23,7 @@ export default function ProfilePage() {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Not authenticated");
 
-        const response = await fetch("http://localhost:5000/users/me", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -38,8 +37,8 @@ export default function ProfilePage() {
 
         const data = await response.json();
         setUser(data.user || data); 
-      } catch (err: any) {
-        setError(err.message || "Something went wrong");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {
         setLoading(false);
       }
@@ -56,7 +55,7 @@ export default function ProfilePage() {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-8">Your Profile</h1>
         <div className="bg-white shadow rounded-lg p-6 max-w-2xl">
-          {user ? <ProfileForm user={user} /> : <div>No user data</div>}
+          {user ? <ProfileForm /> : <div>No user data</div>}
         </div>
       </div>
     </ProtectedRoute>

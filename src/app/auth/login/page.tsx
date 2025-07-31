@@ -14,6 +14,7 @@ type LoginResponse = {
     email: string;
     role: string;
   };
+  message?: string;
 };
 
 export default function LoginPage() {
@@ -26,7 +27,7 @@ export default function LoginPage() {
   setError("");
 
   try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +101,7 @@ export default function LoginPage() {
           />
 
           <div className="text-center text-sm text-gray-600">
-            Don't have an account?{" "}
+            Do not have an account?{" "}
             <Link
               href="/auth/register"
               className="font-medium text-cyan-600 hover:text-cyan-800"

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getCurrentUser, updateUser } from "../../lib/api/user";
+import { Student } from "../../types";
 
 export default function ProfileForm() {
   const [formData, setFormData] = useState({
@@ -23,8 +24,8 @@ export default function ProfileForm() {
           name: user.name,
           email: user.email,
           phone: user.phone || "",
-          course: (user as any).course || "",
-          enrollmentYear: (user as any).enrollmentYear || new Date().getFullYear(),
+          course: (user as Student).course || "",
+          enrollmentYear: (user as Student).enrollmentYear || new Date().getFullYear(),
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load profile");

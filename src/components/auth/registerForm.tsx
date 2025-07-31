@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useRef, ChangeEvent, FormEvent } from "react";
+import { useState, useRef, ChangeEvent } from "react";
 import Image from "next/image";
 
 type FormData = {
@@ -12,6 +12,7 @@ type FormData = {
   confirmPassword: string;
   role: "student" | "admin";
   course: string;
+  enrollmentYear?: string;
   profileImage: File | null;
 };
 
@@ -70,7 +71,9 @@ export default function RegisterForm() {
     if (formData.phone) formPayload.append('phone', formData.phone);
     if (formData.role === 'student') {
       formPayload.append('course', formData.course);
-      formPayload.append('enrollmentYear', formData.enrollmentYear);
+      if (formData.enrollmentYear) {
+        formPayload.append('enrollmentYear', formData.enrollmentYear);
+      }
     }
     if (formData.profileImage) {
       formPayload.append('profileImage', formData.profileImage);
