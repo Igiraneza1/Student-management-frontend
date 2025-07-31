@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import StatsCard from "../../../components/admin/card";
 import StudentTable from "../../../components/admin/studentTable";
 import ProtectedRoute from "../../../components/common/protectedRoute"
@@ -20,12 +21,12 @@ export default function AdminDashboard() {
         <div className="bg-white shadow rounded-lg p-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Student Records</h2>
-            <a
+            <Link
               href="/admin/students/new"
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Add New Student
-            </a>
+            </Link>
           </div>
           <Suspense fallback={<div>Loading students...</div>}>
             <StudentTable />

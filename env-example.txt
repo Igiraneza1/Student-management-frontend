@@ -1,7 +1,0 @@
-# Copy this content to a file named .env.local in your project root
-
-# API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:3001/api
-
-# Development settings
-NODE_ENV=development 
