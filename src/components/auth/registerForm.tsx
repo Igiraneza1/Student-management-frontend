@@ -80,7 +80,7 @@ export default function RegisterForm() {
     }
 
     // Send request
-    const response = await fetch('http://localhost:5000/api/auth/register', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
       method: 'POST',
       body: formPayload
     });
