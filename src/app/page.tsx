@@ -1,9 +1,9 @@
 import React from "react";
-import Login from "./login/page";
+import LoginPage from "../app/auth/login/page";
 export default function Page(){
   return(
     <div>
-      <Login/>
+      <LoginPage/>
     </div>
   )
 }
